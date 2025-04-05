@@ -1,12 +1,14 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const baseURL = "https://todo-app-hure.onrender.com"
+
+const baseURL = "http://localhost:5000/api/todos";
+
 
 const getAllToDo = (setToDo) => {
     axios
         .get(baseURL)
-        .then(({data}) => {
-            console.log('data--> ', data);
+        .then(({ data }) => {
+            console.log('Fetched todos:', data);
             setToDo(data);
         })
         .catch((error) => {
@@ -14,23 +16,24 @@ const getAllToDo = (setToDo) => {
         });
 };
 
+
 const addToDo = (text, setText, setToDo) => {
-    axios  
-        .post(`${baseURL}/save`, {text})
-        .then((data) => {
-            console.log(data);
+    axios
+        .post(`${baseURL}/save`, { text })
+        .then(() => {
             setText("");
             getAllToDo(setToDo);
         })
         .catch((error) => {
             console.error('Error adding todo:', error);
         });
-}
+};
+
 
 const updateToDo = (toDoId, text, setToDo, setText, setIsUpdating) => {
-    axios  
-        .post(`${baseURL}/update`, {_id: toDoId, text})
-        .then((data) => {
+    axios
+        .put(`${baseURL}/update`, { _id: toDoId, text })
+        .then(() => {
             setText("");
             setIsUpdating(false);
             getAllToDo(setToDo);
@@ -38,17 +41,18 @@ const updateToDo = (toDoId, text, setToDo, setText, setIsUpdating) => {
         .catch((error) => {
             console.error('Error updating todo:', error);
         });
-}
+};
+
 
 const deleteToDo = (_id, setToDo) => {
-    axios  
-        .post(`${baseURL}/delete`, {_id: _id})
-        .then((data) => {
+    axios
+        .delete(`${baseURL}/delete`, { data: { _id } })
+        .then(() => {
             getAllToDo(setToDo);
         })
         .catch((error) => {
-            console.error('Error updating todo:', error);
+            console.error('Error deleting todo:', error);
         });
-}
+};
 
-export{getAllToDo, addToDo, updateToDo, deleteToDo};
+export { getAllToDo, addToDo, updateToDo, deleteToDo };
